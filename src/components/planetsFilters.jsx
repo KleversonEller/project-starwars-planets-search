@@ -1,11 +1,27 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import PlanetsContext from '../context/planetsContext';
 
 const Filters = () => {
   const { setFilterByName, data, setData } = useContext(PlanetsContext);
+  const [options, setOptions] = useState([
+    'population',
+    'orbital_period',
+    'diameter',
+    'rotation_period',
+    'surface_water',
+  ]);
   const [filters, setFilters] = useState({ column: 'population',
     comparison: 'maior que',
     value: 0 });
+
+  useEffect(() => {
+    const attOptions = () => {
+      setFilters({ column: options[0],
+        comparison: 'maior que',
+        value: 0 });
+    };
+    attOptions();
+  }, [options]);
 
   const handleInput = (event) => {
     const name = event.target.value;
@@ -19,6 +35,7 @@ const Filters = () => {
 
   const handleClick = () => {
     const { column, comparison, value } = filters;
+    setOptions(options.filter((opition) => opition !== column));
     switch (comparison) {
     case 'maior que':
       return setData(data.filter((planet) => +planet[column] > +value));
@@ -44,11 +61,13 @@ const Filters = () => {
         name="column"
         data-testid="column-filter"
       >
-        <option value="population">population</option>
-        <option value="orbital_period">orbital_period</option>
-        <option value="diameter">diameter</option>
-        <option value="rotation_period">rotation_period</option>
-        <option value="surface_water">surface_water</option>
+        {options.map((opition) => (
+          <option
+            key={ opition }
+            value={ opition }
+          >
+            { opition }
+          </option>))}
       </select>
       <select
         name="comparison"
