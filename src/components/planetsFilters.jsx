@@ -3,7 +3,9 @@ import PlanetsContext from '../context/planetsContext';
 
 const Filters = () => {
   const { setFilterByName, data, setData } = useContext(PlanetsContext);
-  const [filters, setFilters] = useState({ column: '', comparison: '', value: 0 });
+  const [filters, setFilters] = useState({ column: 'population',
+    comparison: 'maior que',
+    value: 0 });
 
   const handleInput = (event) => {
     const name = event.target.value;
@@ -19,11 +21,11 @@ const Filters = () => {
     const { column, comparison, value } = filters;
     switch (comparison) {
     case 'maior que':
-      return setData(data.filter((planet) => planet[column] >= value));
+      return setData(data.filter((planet) => +planet[column] > +value));
     case 'menor que':
-      return setData(data.filter((planet) => planet[column] <= value));
+      return setData(data.filter((planet) => +planet[column] < +value));
     case 'igual a':
-      return setData(data.filter((planet) => planet[column] === value));
+      return setData(data.filter((planet) => +planet[column] === +value));
     default:
       return data;
     }
